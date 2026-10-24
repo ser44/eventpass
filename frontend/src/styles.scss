@@ -1,0 +1,22 @@
+/* Estilos globales. Mobile-first. */
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Imágenes nunca desbordan su contenedor. */
+img { max-width: 100%; height: auto; }
+
+/* Títulos largos no rompen el layout. */
+h1, h2, h3 { overflow-wrap: anywhere; }
+
+/* Utilidad: contenedor centrado con ancho máximo. */
+.contenedor {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+}

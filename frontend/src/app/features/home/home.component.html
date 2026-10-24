@@ -1,0 +1,44 @@
+<div class="home">
+  <mat-card class="tarjeta">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>celebration</mat-icon>
+      <mat-card-title>Hola 👋</mat-card-title>
+      <mat-card-subtitle>EventPass — esqueleto (Fase 0)</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p>
+        El frontend Angular 18 está servido por nginx, que además hace de proxy
+        hacia la API. Probá la conexión con el backend:
+      </p>
+
+      @switch (estado()) {
+        @case ('ok') {
+          <p class="ok">
+            <mat-icon>check_circle</mat-icon>
+            {{ respuesta()?.mensaje }} ({{ respuesta()?.servicio }})
+          </p>
+        }
+        @case ('error') {
+          <p class="error">
+            <mat-icon>error</mat-icon>
+            No se pudo contactar al backend.
+          </p>
+        }
+        @case ('cargando') {
+          <p>Consultando…</p>
+        }
+      }
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="probarBackend()"
+        [disabled]="estado() === 'cargando'">
+        Probar backend
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

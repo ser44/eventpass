@@ -1,0 +1,40 @@
+<mat-sidenav-container class="layout">
+  <mat-sidenav
+    #snav
+    [mode]="esCompacto() ? 'over' : 'side'"
+    [opened]="!esCompacto()"
+    class="sidenav">
+    <mat-nav-list>
+      @for (link of links; track link.ruta) {
+        <a
+          mat-list-item
+          [routerLink]="link.ruta"
+          routerLinkActive="activo"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="esCompacto() && snav.close()">
+          <mat-icon matListItemIcon>{{ link.icono }}</mat-icon>
+          <span matListItemTitle>{{ link.texto }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="toolbar">
+      @if (esCompacto()) {
+        <button mat-icon-button aria-label="Abrir menú" (click)="snav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+      <span class="titulo">EventPass</span>
+      <span class="spacer"></span>
+      @if (!esCompacto()) {
+        <a mat-button routerLink="/">Inicio</a>
+      }
+    </mat-toolbar>
+
+    <main class="contenido">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

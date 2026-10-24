@@ -1,0 +1,18 @@
+# Override de DESARROLLO (se aplica solo con `docker compose up`, no en prod).
+# Agrega Mailpit y expone puertos internos para depurar.
+services:
+
+  db:
+    ports:
+      - "5432:5432"   # Postgres accesible desde la PC (DBeaver, psql, etc.)
+
+  api:
+    ports:
+      - "8080:8080"   # API directa, sin pasar por nginx
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "8025:8025"   # UI web de Mailpit
+      - "1025:1025"   # SMTP falso
+    restart: unless-stopped

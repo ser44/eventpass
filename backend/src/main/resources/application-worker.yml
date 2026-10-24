@@ -1,0 +1,5 @@
+# Perfil `worker`: mismo código que `api`, otro rol.
+# No expone endpoints de negocio; corre jobs en segundo plano (desde la Fase 4).
+# Escucha en 8081 para que Prometheus lo scrapee en worker:8081/api/v1/actuator/prometheus.
+server:
+  port: 8081

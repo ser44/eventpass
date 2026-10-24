@@ -1,0 +1,69 @@
+# Stack base de EventPass: frontend + api + worker + db.
+# `docker compose up --build`  ->  app en http://localhost
+# El override de dev (mailpit, puertos) se aplica automáticamente.
+services:
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: eventpass
+      POSTGRES_USER: eventpass
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-eventpass}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eventpass -d eventpass"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build: ./backend
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
+      DB_URL: jdbc:postgresql://db:5432/eventpass
+      DB_USER: eventpass
+      DB_PASSWORD: ${DB_PASSWORD:-eventpass}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-cambiar-por-uno-de-32-bytes-minimo}
+      APP_RESERVA_TTL_MINUTOS: ${APP_RESERVA_TTL_MINUTOS:-10}
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75 -Duser.timezone=America/Argentina/Buenos_Aires"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/api/v1/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    restart: unless-stopped
+
+  worker:
+    build: ./backend
+    environment:
+      SPRING_PROFILES_ACTIVE: worker
+      DB_URL: jdbc:postgresql://db:5432/eventpass
+      DB_USER: eventpass
+      DB_PASSWORD: ${DB_PASSWORD:-eventpass}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-cambiar-por-uno-de-32-bytes-minimo}
+      APP_RESERVA_TTL_MINUTOS: ${APP_RESERVA_TTL_MINUTOS:-10}
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75 -Duser.timezone=America/Argentina/Buenos_Aires"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:

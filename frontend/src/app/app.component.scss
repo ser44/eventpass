@@ -1,0 +1,29 @@
+.layout {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 240px;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.titulo {
+  font-weight: 500;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.contenido {
+  padding: 16px;
+}
+
+.activo {
+  font-weight: 700;
+}
