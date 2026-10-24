@@ -1,0 +1,61 @@
+<div class="form-wrap">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ modoEditar() ? 'Editar evento' : 'Nuevo evento' }}</mat-card-title>
+    </mat-card-header>
+
+    @if (cargando()) {
+      <app-loading></app-loading>
+    } @else {
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="enviar()" class="grilla">
+          <mat-form-field appearance="outline" class="ancho-completo">
+            <mat-label>Título</mat-label>
+            <input matInput formControlName="titulo" />
+            @if (form.controls.titulo.hasError('required') && form.controls.titulo.touched) {
+              <mat-error>El título es obligatorio</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Lugar</mat-label>
+            <input matInput formControlName="lugar" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha y hora</mat-label>
+            <input matInput type="datetime-local" formControlName="fechaInicio" />
+            @if (form.controls.fechaInicio.hasError('required') && form.controls.fechaInicio.touched) {
+              <mat-error>La fecha es obligatoria</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Cupo total</mat-label>
+            <input matInput type="number" min="1" formControlName="cupoTotal" />
+            @if (form.controls.cupoTotal.hasError('min')) {
+              <mat-error>El cupo debe ser al menos 1</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="ancho-completo">
+            <mat-label>Imagen (URL, opcional)</mat-label>
+            <input matInput formControlName="imagenUrl" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="ancho-completo">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput rows="4" formControlName="descripcion"></textarea>
+          </mat-form-field>
+
+          <div class="acciones ancho-completo">
+            <button mat-button type="button" (click)="form.reset()">Limpiar</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="enviando()">
+              {{ modoEditar() ? 'Guardar cambios' : 'Crear evento' }}
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    }
+  </mat-card>
+</div>

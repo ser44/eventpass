@@ -1,0 +1,35 @@
+<div class="catalogo">
+  <h1>Eventos</h1>
+
+  <mat-form-field appearance="outline" class="buscador">
+    <mat-label>Buscar por título</mat-label>
+    <input matInput [formControl]="busqueda" />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  @if (cargando()) {
+    <app-loading></app-loading>
+  } @else if (error()) {
+    <app-empty-state icono="error" mensaje="No se pudieron cargar los eventos."></app-empty-state>
+  } @else if (eventos().length === 0) {
+    <app-empty-state icono="event_busy" mensaje="No hay eventos publicados por ahora."></app-empty-state>
+  } @else {
+    <div class="grilla">
+      @for (e of eventos(); track e.id) {
+        <app-event-card [evento]="e"></app-event-card>
+      }
+    </div>
+
+    @if (totalPaginas() > 1) {
+      <div class="paginacion">
+        <button mat-stroked-button [disabled]="pagina() === 0" (click)="irA(pagina() - 1)">
+          <mat-icon>chevron_left</mat-icon> Anterior
+        </button>
+        <span>Página {{ pagina() + 1 }} de {{ totalPaginas() }}</span>
+        <button mat-stroked-button [disabled]="pagina() + 1 >= totalPaginas()" (click)="irA(pagina() + 1)">
+          Siguiente <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    }
+  }
+</div>

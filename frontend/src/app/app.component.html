@@ -5,12 +5,11 @@
     [opened]="!esCompacto()"
     class="sidenav">
     <mat-nav-list>
-      @for (link of links; track link.ruta) {
+      @for (link of links(); track link.ruta) {
         <a
           mat-list-item
           [routerLink]="link.ruta"
           routerLinkActive="activo"
-          [routerLinkActiveOptions]="{ exact: true }"
           (click)="esCompacto() && snav.close()">
           <mat-icon matListItemIcon>{{ link.icono }}</mat-icon>
           <span matListItemTitle>{{ link.texto }}</span>

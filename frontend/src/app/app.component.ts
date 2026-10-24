@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -33,7 +33,15 @@ export class AppComponent {
     { initialValue: false },
   );
 
-  readonly links = [{ ruta: '/', texto: 'Inicio', icono: 'home' }];
+  // El menú cambia según el rol del usuario.
+  readonly links = computed(() => {
+    const u = this.auth.usuario();
+    const items = [{ ruta: '/eventos', texto: 'Eventos', icono: 'event' }];
+    if (u?.rol === 'ORGANIZADOR') {
+      items.push({ ruta: '/organizador', texto: 'Mis eventos', icono: 'dashboard' });
+    }
+    return items;
+  });
 
   logout(): void {
     this.auth.logout();

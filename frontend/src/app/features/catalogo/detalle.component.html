@@ -1,0 +1,35 @@
+@if (cargando()) {
+  <app-loading></app-loading>
+} @else if (error() || !evento()) {
+  <app-empty-state icono="error" mensaje="No se encontró el evento."></app-empty-state>
+} @else {
+  <div class="detalle">
+    <a mat-button routerLink="/eventos"><mat-icon>arrow_back</mat-icon> Volver</a>
+
+    <mat-card>
+      @if (evento()!.imagenUrl) {
+        <img [src]="evento()!.imagenUrl" [alt]="evento()!.titulo" class="portada" />
+      }
+      <mat-card-content>
+        <h1 class="titulo">{{ evento()!.titulo }}</h1>
+        <mat-chip-set>
+          <mat-chip>{{ evento()!.estado }}</mat-chip>
+        </mat-chip-set>
+
+        <p class="meta"><mat-icon>place</mat-icon> {{ evento()!.lugar }}</p>
+        <p class="meta"><mat-icon>event</mat-icon> {{ evento()!.fechaInicio | date: 'full' }}</p>
+
+        @if (evento()!.descripcion) {
+          <p class="descripcion">{{ evento()!.descripcion }}</p>
+        }
+
+        <div class="cupo" [class.agotado]="evento()!.cupoDisponible === 0">
+          <mat-icon>confirmation_number</mat-icon>
+          <span>{{ evento()!.cupoDisponible }} de {{ evento()!.cupoTotal }} lugares disponibles</span>
+        </div>
+
+        <p class="aviso">La reserva de entradas se habilita en la próxima etapa.</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+}

@@ -1,0 +1,47 @@
+<div class="panel">
+  <div class="encabezado">
+    <h1>Mis eventos</h1>
+    <a mat-raised-button color="primary" routerLink="/organizador/eventos/nuevo">
+      <mat-icon>add</mat-icon> Nuevo evento
+    </a>
+  </div>
+
+  @if (cargando()) {
+    <app-loading></app-loading>
+  } @else if (error()) {
+    <app-empty-state icono="error" mensaje="No se pudieron cargar tus eventos."></app-empty-state>
+  } @else if (eventos().length === 0) {
+    <app-empty-state icono="event_note" mensaje="Todavía no creaste eventos."></app-empty-state>
+  } @else {
+    <div class="lista">
+      @for (e of eventos(); track e.id) {
+        <mat-card class="item">
+          <mat-card-content>
+            <div class="fila">
+              <h3 class="titulo">{{ e.titulo }}</h3>
+              <mat-chip [class]="'estado-' + e.estado">{{ e.estado }}</mat-chip>
+            </div>
+            <p class="meta"><mat-icon>event</mat-icon> {{ e.fechaInicio | date: 'medium' }}</p>
+            <p class="meta"><mat-icon>confirmation_number</mat-icon>
+              {{ e.cupoDisponible }} / {{ e.cupoTotal }} lugares</p>
+          </mat-card-content>
+          <mat-card-actions align="end" class="acciones">
+            <a mat-button [routerLink]="['/organizador/eventos', e.id, 'editar']">
+              <mat-icon>edit</mat-icon> Editar
+            </a>
+            @if (e.estado === 'BORRADOR') {
+              <button mat-button color="primary" (click)="publicar(e)">
+                <mat-icon>publish</mat-icon> Publicar
+              </button>
+            }
+            @if (e.estado === 'BORRADOR' || e.estado === 'PUBLICADO') {
+              <button mat-button color="warn" (click)="cancelar(e)">
+                <mat-icon>cancel</mat-icon> Cancelar
+              </button>
+            }
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+</div>
