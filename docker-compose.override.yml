@@ -9,6 +9,8 @@ services:
   api:
     ports:
       - "8080:8080"   # API directa, sin pasar por nginx
+    environment:
+      SPRING_PROFILES_ACTIVE: dev   # logs legibles + DataSeeder (usuarios semilla)
 
   mailpit:
     image: axllent/mailpit

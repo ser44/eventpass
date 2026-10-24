@@ -27,3 +27,19 @@
 .activo {
   font-weight: 700;
 }
+
+.nombre-usuario {
+  margin-left: 4px;
+}
+
+/* En pantallas muy chicas, el nombre se oculta y queda solo el ícono. */
+@media (max-width: 400px) {
+  .nombre-usuario {
+    display: none;
+  }
+}
+
+.menu-rol {
+  font-size: 12px;
+  opacity: 0.7;
+}

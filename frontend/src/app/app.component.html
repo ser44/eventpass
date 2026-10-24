@@ -28,8 +28,22 @@
       }
       <span class="titulo">EventPass</span>
       <span class="spacer"></span>
-      @if (!esCompacto()) {
-        <a mat-button routerLink="/">Inicio</a>
+
+      @if (auth.estaAutenticado()) {
+        <button mat-button [matMenuTriggerFor]="menu" aria-label="Menú de usuario">
+          <mat-icon>account_circle</mat-icon>
+          <span class="nombre-usuario">{{ auth.usuario()?.nombre }}</span>
+        </button>
+        <mat-menu #menu="matMenu">
+          <div class="menu-rol" mat-menu-item disabled>{{ auth.usuario()?.rol }}</div>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Salir</span>
+          </button>
+        </mat-menu>
+      } @else {
+        <a mat-button routerLink="/login">Ingresar</a>
+        <a mat-button routerLink="/registro">Registrarse</a>
       }
     </mat-toolbar>
 

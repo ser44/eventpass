@@ -8,19 +8,22 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { AuthService } from './core/auth/auth.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet, RouterLink, RouterLinkActive,
-    MatToolbarModule, MatSidenavModule, MatButtonModule, MatIconModule, MatListModule,
+    MatToolbarModule, MatSidenavModule, MatButtonModule, MatIconModule, MatListModule, MatMenuModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
   private readonly breakpoints = inject(BreakpointObserver);
+  readonly auth = inject(AuthService);
 
   // true en celular/tablet chico: el sidenav pasa a modo "over" con hamburguesa.
   readonly esCompacto = toSignal(
@@ -30,6 +33,9 @@ export class AppComponent {
     { initialValue: false },
   );
 
-  // Links de navegación. En fases siguientes se suman según el rol del usuario.
   readonly links = [{ ruta: '/', texto: 'Inicio', icono: 'home' }];
+
+  logout(): void {
+    this.auth.logout();
+  }
 }

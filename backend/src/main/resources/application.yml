@@ -33,6 +33,8 @@ management:
 
 # Parámetros de negocio (configurables por entorno)
 app:
+  jwt:
+    secret: ${JWT_SECRET:dev-secret-cambiar-por-uno-de-32-bytes-minimo}
   reserva:
     ttl-minutos: ${APP_RESERVA_TTL_MINUTOS:10}
     cancelacion-horas: 48
