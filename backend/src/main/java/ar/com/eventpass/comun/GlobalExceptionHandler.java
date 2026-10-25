@@ -17,6 +17,7 @@ public class GlobalExceptionHandler {
     public ProblemDetail manejarDominio(DominioException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(ex.getStatus(), ex.getMessage());
         pd.setProperty("code", ex.getCode());
+        ex.getPropiedades().forEach(pd::setProperty);
         return pd;
     }
 

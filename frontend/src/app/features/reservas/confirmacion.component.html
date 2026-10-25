@@ -1,0 +1,39 @@
+@if (cargando()) {
+  <app-loading></app-loading>
+} @else if (error() || !reserva()) {
+  <app-empty-state icono="error" mensaje="No se encontró la reserva."></app-empty-state>
+} @else {
+  <div class="confirmacion">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Confirmá tu reserva</mat-card-title>
+        <mat-card-subtitle>{{ reserva()!.eventoTitulo }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="cuerpo">
+        <p class="cantidad">{{ reserva()!.cantidad }} entrada(s)</p>
+
+        @if (vencida()) {
+          <p class="vencida">
+            <mat-icon>timer_off</mat-icon>
+            Tu reserva venció. Volvé al evento para intentar de nuevo.
+          </p>
+        } @else {
+          <p class="aviso">Tenés tiempo para confirmar antes de que se libere el cupo:</p>
+          <app-countdown [expiraEn]="reserva()!.expiraEn" (expirado)="alVencer()"></app-countdown>
+        }
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        @if (vencida()) {
+          <button mat-raised-button color="primary" (click)="confirmar()" disabled>Confirmar</button>
+        } @else {
+          <button mat-raised-button color="primary" class="btn-confirmar"
+                  (click)="confirmar()" [disabled]="confirmando()">
+            Confirmar reserva
+          </button>
+        }
+      </mat-card-actions>
+    </mat-card>
+  </div>
+}

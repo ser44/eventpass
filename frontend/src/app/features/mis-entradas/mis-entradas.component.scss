@@ -1,0 +1,43 @@
+.mis-entradas {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.grupo {
+  margin-bottom: 16px;
+}
+
+.entradas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.entrada {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.qr-inactivo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  opacity: 0.6;
+}
+
+.qr-inactivo mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+.estado-VALIDA { background: #c8e6c9; }
+.estado-USADA { background: #e0e0e0; }
+.estado-ANULADA { background: #ffcdd2; }

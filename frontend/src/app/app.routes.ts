@@ -22,6 +22,18 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/registro.component').then((m) => m.RegistroComponent),
   },
   {
+    path: 'reservas/:id',
+    canActivate: [roleGuard],
+    loadComponent: () =>
+      import('./features/reservas/confirmacion.component').then((m) => m.ConfirmacionComponent),
+  },
+  {
+    path: 'mis-entradas',
+    canActivate: [roleGuard],
+    loadComponent: () =>
+      import('./features/mis-entradas/mis-entradas.component').then((m) => m.MisEntradasComponent),
+  },
+  {
     path: 'organizador',
     canActivate: [roleGuard],
     data: { roles: ['ORGANIZADOR'] },

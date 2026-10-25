@@ -37,6 +37,9 @@ export class AppComponent {
   readonly links = computed(() => {
     const u = this.auth.usuario();
     const items = [{ ruta: '/eventos', texto: 'Eventos', icono: 'event' }];
+    if (u) {
+      items.push({ ruta: '/mis-entradas', texto: 'Mis entradas', icono: 'confirmation_number' });
+    }
     if (u?.rol === 'ORGANIZADOR') {
       items.push({ ruta: '/organizador', texto: 'Mis eventos', icono: 'dashboard' });
     }

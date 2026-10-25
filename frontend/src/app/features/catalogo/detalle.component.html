@@ -12,9 +12,7 @@
       }
       <mat-card-content>
         <h1 class="titulo">{{ evento()!.titulo }}</h1>
-        <mat-chip-set>
-          <mat-chip>{{ evento()!.estado }}</mat-chip>
-        </mat-chip-set>
+        <mat-chip-set><mat-chip>{{ evento()!.estado }}</mat-chip></mat-chip-set>
 
         <p class="meta"><mat-icon>place</mat-icon> {{ evento()!.lugar }}</p>
         <p class="meta"><mat-icon>event</mat-icon> {{ evento()!.fechaInicio | date: 'full' }}</p>
@@ -27,9 +25,26 @@
           <mat-icon>confirmation_number</mat-icon>
           <span>{{ evento()!.cupoDisponible }} de {{ evento()!.cupoTotal }} lugares disponibles</span>
         </div>
-
-        <p class="aviso">La reserva de entradas se habilita en la próxima etapa.</p>
       </mat-card-content>
     </mat-card>
+
+    @if (puedeReservar()) {
+      <div class="reservar-barra">
+        <div class="selector">
+          <span>Cantidad:</span>
+          <mat-button-toggle-group [value]="cantidad()" (change)="cantidad.set($event.value)" hideSingleSelectionIndicator>
+            @for (n of opciones; track n) {
+              <mat-button-toggle [value]="n">{{ n }}</mat-button-toggle>
+            }
+          </mat-button-toggle-group>
+        </div>
+        <button mat-raised-button color="primary" class="btn-reservar"
+                (click)="reservar()" [disabled]="reservando()">
+          <mat-icon>shopping_cart</mat-icon> Reservar
+        </button>
+      </div>
+    } @else if (evento()!.cupoDisponible === 0) {
+      <p class="agotado-aviso">Entradas agotadas.</p>
+    }
   </div>
 }

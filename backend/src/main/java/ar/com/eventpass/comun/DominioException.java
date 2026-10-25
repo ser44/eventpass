@@ -1,5 +1,7 @@
 package ar.com.eventpass.comun;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 
 /**
@@ -17,4 +19,9 @@ public abstract class DominioException extends RuntimeException {
     public abstract String getCode();
 
     public abstract HttpStatus getStatus();
+
+    /** Datos extra que aportan al error (p. ej. cupoDisponible, usadaEn). */
+    public Map<String, Object> getPropiedades() {
+        return Map.of();
+    }
 }
