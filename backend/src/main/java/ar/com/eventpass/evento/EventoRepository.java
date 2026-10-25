@@ -40,7 +40,7 @@ public interface EventoRepository extends JpaRepository<Evento, UUID> {
      * Nunca leer-comparar-guardar en Java. Devuelve 0 si no hay cupo o el evento
      * no es reservable. El UPDATE JPQL no incrementa `version` (correcto).
      */
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Modifying(flushAutomatically = true)
     @Query("""
         update Evento e set e.cupoDisponible = e.cupoDisponible - :cantidad
         where e.id = :id
@@ -51,7 +51,7 @@ public interface EventoRepository extends JpaRepository<Evento, UUID> {
     int descontarCupo(@Param("id") UUID id, @Param("cantidad") int cantidad, @Param("ahora") Instant ahora);
 
     /** Restitución de cupo (expirar/cancelar), también atómica, sin pasarse del total. */
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Modifying(flushAutomatically = true)
     @Query("""
         update Evento e set e.cupoDisponible = e.cupoDisponible + :cantidad
         where e.id = :id and e.cupoDisponible + :cantidad <= e.cupoTotal

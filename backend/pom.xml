@@ -43,6 +43,12 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+        <!-- Mail (notificaciones por SMTP; Mailpit en dev) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <!-- Seguridad: stateless + JWT HS256 (resource server) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

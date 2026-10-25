@@ -2,6 +2,7 @@ package ar.com.eventpass.usuario;
 
 import java.util.UUID;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -20,6 +21,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
+@Profile("!worker")
 public class AuthController {
 
     private final UsuarioService service;

@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,6 +29,7 @@ import ar.com.eventpass.evento.dto.EventoResumenDto;
 import jakarta.validation.Valid;
 
 @RestController
+@Profile("!worker")
 public class EventoController {
 
     private final EventoService service;

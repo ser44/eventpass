@@ -3,6 +3,7 @@ package ar.com.eventpass.reserva;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -22,6 +23,7 @@ import ar.com.eventpass.reserva.dto.ReservaDto;
 import jakarta.validation.Valid;
 
 @RestController
+@Profile("!worker")
 public class ReservaController {
 
     private final ReservaService service;

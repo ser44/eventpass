@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,8 @@ import ar.com.eventpass.evento.EventoRepository;
 import ar.com.eventpass.idempotencia.IdempotenciaService;
 import ar.com.eventpass.reserva.dto.ReservaConfirmadaDto;
 import ar.com.eventpass.reserva.dto.ReservaDto;
+import ar.com.eventpass.usuario.UsuarioService;
+import ar.com.eventpass.usuario.dto.UsuarioDto;
 
 /**
  * Casos de uso de reservas. Usa EventoRepository solo para el descuento/restitución
@@ -40,6 +43,8 @@ public class ReservaService {
     private final EntradaRepository entradaRepo;
     private final EventoRepository eventoRepo;
     private final IdempotenciaService idempotencia;
+    private final UsuarioService usuarioService;
+    private final ApplicationEventPublisher eventos;
     private final ObjectMapper json;
     private final Clock clock;
     private final int ttlMinutos;
@@ -47,6 +52,7 @@ public class ReservaService {
 
     public ReservaService(ReservaRepository reservaRepo, EntradaRepository entradaRepo,
                           EventoRepository eventoRepo, IdempotenciaService idempotencia,
+                          UsuarioService usuarioService, ApplicationEventPublisher eventos,
                           ObjectMapper json, Clock clock,
                           @Value("${app.reserva.ttl-minutos}") int ttlMinutos,
                           @Value("${app.reserva.cancelacion-horas}") int cancelacionHoras) {
@@ -54,6 +60,8 @@ public class ReservaService {
         this.entradaRepo = entradaRepo;
         this.eventoRepo = eventoRepo;
         this.idempotencia = idempotencia;
+        this.usuarioService = usuarioService;
+        this.eventos = eventos;
         this.json = json;
         this.clock = clock;
         this.ttlMinutos = ttlMinutos;
@@ -99,8 +107,12 @@ public class ReservaService {
         List<Entrada> entradas = r.confirmar(clock);
         entradaRepo.saveAll(entradas);
         reservaRepo.save(r);
-        // La publicación de ReservaConfirmadaEvent (outbox + mail) se agrega en Fase 4.
         Evento e = eventoRepo.findById(r.getEventoId()).orElse(null);
+        UsuarioDto u = usuarioService.buscarPorId(usuarioId);
+        List<String> codigos = entradas.stream().map(Entrada::getCodigo).toList();
+        // Observer + Outbox: el listener inserta el mensaje en esta misma transacción.
+        eventos.publishEvent(new ReservaConfirmadaEvent(r.getId(), u.email(), u.nombre(),
+            tituloDe(e), e == null ? null : e.getFechaInicio(), e == null ? null : e.getLugar(), codigos));
         List<EntradaDto> dtos = entradas.stream().map(en -> aEntradaDto(en, e)).toList();
         return new ReservaConfirmadaDto(r.getId(), r.getEventoId(), tituloDe(e), r.getEstado(), dtos);
     }
@@ -116,7 +128,9 @@ public class ReservaService {
         entradaRepo.saveAll(entradas);
         eventoRepo.restituirCupo(r.getEventoId(), r.getCantidad());
         reservaRepo.save(r);
-        // La publicación de ReservaCanceladaEvent se agrega en Fase 4.
+        UsuarioDto u = usuarioService.buscarPorId(usuarioId);
+        eventos.publishEvent(new ReservaCanceladaEvent(r.getId(), u.email(), u.nombre(),
+            e.getTitulo(), e.getFechaInicio(), e.getLugar()));
     }
 
     @Transactional(readOnly = true)

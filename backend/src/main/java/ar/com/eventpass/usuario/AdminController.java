@@ -3,6 +3,7 @@ package ar.com.eventpass.usuario;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,6 +18,7 @@ import ar.com.eventpass.usuario.dto.UsuarioDto;
 @RestController
 @RequestMapping("/admin/users")
 @PreAuthorize("hasRole('ADMIN')")
+@Profile("!worker")
 public class AdminController {
 
     private final UsuarioService service;
