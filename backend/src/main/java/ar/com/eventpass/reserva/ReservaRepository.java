@@ -26,4 +26,11 @@ public interface ReservaRepository extends JpaRepository<Reserva, UUID> {
     List<Reserva> tomarVencidas(@Param("ahora") Instant ahora, @Param("limite") int limite);
 
     long countByEstadoAndExpiraEnBefore(EstadoReserva estado, Instant ahora);
+
+    /** Suma de entradas retenidas (reservas PENDIENTE) de un evento, para las stats. */
+    @Query("""
+        select coalesce(sum(r.cantidad), 0) from Reserva r
+        where r.eventoId = :eventoId and r.estado = ar.com.eventpass.reserva.EstadoReserva.PENDIENTE
+        """)
+    long sumarRetenidas(@Param("eventoId") UUID eventoId);
 }

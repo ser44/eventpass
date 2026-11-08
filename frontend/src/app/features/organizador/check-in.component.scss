@@ -1,0 +1,99 @@
+.checkin {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: #000;
+}
+
+/* Resultado a pantalla completa */
+.resultado {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #fff;
+  text-align: center;
+  padding: 24px;
+}
+
+.resultado mat-icon {
+  font-size: 96px;
+  width: 96px;
+  height: 96px;
+}
+
+.resultado h1 {
+  margin: 0;
+  font-size: 2rem;
+  overflow-wrap: anywhere;
+}
+
+.titular {
+  font-size: 1.4rem;
+}
+
+.verde { background: #2e7d32; }
+.rojo { background: #c62828; }
+
+/* Escáner */
+.escaner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.barra-sup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px calc(8px + env(safe-area-inset-top));
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.sel-camara {
+  margin-left: auto;
+  max-width: 45%;
+}
+
+.camara {
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+}
+
+.camara ::ng-deep video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.validando {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.manual {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
+  background: #fff;
+}
+
+.campo {
+  flex: 1;
+}
+
+.manual button {
+  min-height: 56px;
+}

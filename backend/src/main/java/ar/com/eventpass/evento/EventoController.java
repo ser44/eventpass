@@ -26,6 +26,7 @@ import ar.com.eventpass.evento.dto.ActualizarEventoRequest;
 import ar.com.eventpass.evento.dto.CrearEventoRequest;
 import ar.com.eventpass.evento.dto.EventoDto;
 import ar.com.eventpass.evento.dto.EventoResumenDto;
+import ar.com.eventpass.evento.dto.StatsDto;
 import jakarta.validation.Valid;
 
 @RestController
@@ -33,9 +34,11 @@ import jakarta.validation.Valid;
 public class EventoController {
 
     private final EventoService service;
+    private final EstadisticasService estadisticas;
 
-    public EventoController(EventoService service) {
+    public EventoController(EventoService service, EstadisticasService estadisticas) {
         this.service = service;
+        this.estadisticas = estadisticas;
     }
 
     // ---------- Público ----------
@@ -90,6 +93,12 @@ public class EventoController {
     @PreAuthorize("hasRole('ORGANIZADOR')")
     public List<EventoResumenDto> misEventos(@AuthenticationPrincipal Jwt jwt) {
         return service.listarMisEventos(idDe(jwt));
+    }
+
+    @GetMapping("/events/{id}/stats")
+    @PreAuthorize("hasAnyRole('ORGANIZADOR', 'ADMIN')")
+    public StatsDto stats(@PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
+        return estadisticas.de(id, idDe(jwt), esAdmin(jwt));
     }
 
     private static UUID idDe(Jwt jwt) {

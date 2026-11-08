@@ -48,6 +48,20 @@
   flex-wrap: wrap;
 }
 
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+}
+
+.stats strong {
+  font-size: 16px;
+}
+
 .estado-PUBLICADO { background: #c8e6c9; }
 .estado-BORRADOR { background: #fff9c4; }
 .estado-CANCELADO { background: #ffcdd2; }

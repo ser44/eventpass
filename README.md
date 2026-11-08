@@ -53,9 +53,17 @@ El acceso público se hace con un **túnel de Cloudflare** sobre el stack local 
 docker run --rm --network host cloudflare/cloudflared tunnel --url http://localhost:80
 ```
 
-Cloudflared imprime una URL `https://<algo>.trycloudflare.com` accesible desde cualquier lado (y con HTTPS, necesario para la cámara del check-in en fases futuras). La URL vive mientras el comando siga corriendo.
+Cloudflared imprime una URL `https://<algo>.trycloudflare.com` accesible desde cualquier lado (y con HTTPS). La URL vive mientras el comando siga corriendo.
 
-> Un link estable (named tunnel con cuenta gratuita de Cloudflare) se documentará cuando sea necesario, en la Fase 5/8.
+> Un link estable (named tunnel con cuenta gratuita de Cloudflare) se documentará cuando sea necesario.
+
+### Check-in desde el celular (requiere HTTPS)
+
+La pantalla de check-in usa la cámara (`getUserMedia`), que **fuera de `localhost` exige HTTPS**. Para escanear QR desde un celular:
+
+- **En la PC** (navegador en `http://localhost`): la cámara funciona sin HTTPS.
+- **Desde un celular**: abrí la **URL del túnel de Cloudflare** (es HTTPS) → `…/organizador/check-in/<id>`. El organizador ingresa con `orga@eventpass.dev` / `Orga123!`.
+- Si la cámara no tiene permiso, la pantalla tiene **ingreso manual del código** siempre visible.
 
 ## Estructura
 

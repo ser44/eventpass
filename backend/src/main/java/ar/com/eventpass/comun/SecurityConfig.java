@@ -45,10 +45,10 @@ public class SecurityConfig {
                 .requestMatchers("/actuator/prometheus").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/register", "/auth/login").permitAll()
                 .requestMatchers("/hola").permitAll()
-                // Catálogo y detalle de eventos: públicos (solo GET).
-                // "/events/**" cubre /events y /events/{id}. En Fase 5, los sub-recursos
-                // GET que no sean públicos (p. ej. /events/{id}/stats) se restringen con
-                // una regla más específica declarada ANTES de esta.
+                // Las stats NO son públicas (regla específica ANTES del permitAll del catálogo).
+                .requestMatchers(HttpMethod.GET, "/events/*/stats").authenticated()
+                // Catálogo y detalle de eventos: públicos (solo GET). "/events/**" cubre
+                // /events y /events/{id}.
                 .requestMatchers(HttpMethod.GET, "/events", "/events/**").permitAll()
                 .anyRequest().authenticated())
             .oauth2ResourceServer(o -> o.jwt(j -> j.jwtAuthenticationConverter(convertidorJwt())));

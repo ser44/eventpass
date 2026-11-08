@@ -9,6 +9,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { EventoService } from '../../core/eventos/evento.service';
 import { EventoResumen } from '../../core/models/evento.model';
+import { CheckinService } from '../../core/checkin/checkin.service';
+import { Stats } from '../../core/models/checkin.model';
 import { LoadingComponent } from '../../shared/loading.component';
 import { EmptyStateComponent } from '../../shared/empty-state.component';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog.component';
@@ -26,12 +28,26 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog.component';
 })
 export class PanelComponent implements OnInit {
   private readonly service = inject(EventoService);
+  private readonly checkin = inject(CheckinService);
   private readonly snack = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
 
   readonly eventos = signal<EventoResumen[]>([]);
   readonly cargando = signal(true);
   readonly error = signal(false);
+  readonly stats = signal<Record<string, Stats>>({});
+
+  verStats(e: EventoResumen): void {
+    if (this.stats()[e.id]) {
+      const copia = { ...this.stats() };
+      delete copia[e.id];
+      this.stats.set(copia);
+      return;
+    }
+    this.checkin.stats(e.id).subscribe({
+      next: (s) => this.stats.set({ ...this.stats(), [e.id]: s }),
+    });
+  }
 
   ngOnInit(): void {
     this.cargar();

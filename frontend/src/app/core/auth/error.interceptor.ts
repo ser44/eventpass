@@ -1,9 +1,13 @@
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { HttpContextToken, HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
+
+/** Si está en true en el contexto de la request, el interceptor NO muestra snackbar
+ * (lo usa el check-in, que muestra el error a pantalla completa). El 401 se maneja igual. */
+export const SILENCIAR_ERROR = new HttpContextToken<boolean>(() => false);
 
 /** Traduce `code` de Problem Details a mensajes en español. */
 function mensajeDeError(err: HttpErrorResponse): string {
@@ -39,7 +43,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       if (err.status === 401 && !esLogin) {
         auth.logout();
         router.navigate(['/login'], { queryParams: { redirect: router.url } });
-      } else {
+      } else if (!req.context.get(SILENCIAR_ERROR)) {
         snack.open(mensajeDeError(err), 'Cerrar', { duration: 5000 });
       }
       return throwError(() => err);

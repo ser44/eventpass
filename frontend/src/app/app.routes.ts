@@ -54,5 +54,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/organizador/evento-form.component').then((m) => m.EventoFormComponent),
   },
+  {
+    path: 'organizador/check-in/:id',
+    canActivate: [roleGuard],
+    data: { roles: ['ORGANIZADOR'] },
+    loadComponent: () =>
+      import('./features/organizador/check-in.component').then((m) => m.CheckInComponent),
+  },
   { path: '**', redirectTo: '' },
 ];

@@ -24,8 +24,26 @@
             <p class="meta"><mat-icon>event</mat-icon> {{ e.fechaInicio | date: 'medium' }}</p>
             <p class="meta"><mat-icon>confirmation_number</mat-icon>
               {{ e.cupoDisponible }} / {{ e.cupoTotal }} lugares</p>
+
+            @if (stats()[e.id]; as s) {
+              <div class="stats">
+                <span><strong>{{ s.vendidas }}</strong> vendidas</span>
+                <span><strong>{{ s.retenidas }}</strong> retenidas</span>
+                <span><strong>{{ s.ingresadas }}</strong> ingresadas</span>
+                <span><strong>{{ s.canceladas }}</strong> canceladas</span>
+                <span><strong>{{ s.disponibles }}</strong> disponibles</span>
+              </div>
+            }
           </mat-card-content>
           <mat-card-actions align="end" class="acciones">
+            <button mat-button (click)="verStats(e)">
+              <mat-icon>bar_chart</mat-icon> {{ stats()[e.id] ? 'Ocultar' : 'Estadísticas' }}
+            </button>
+            @if (e.estado === 'PUBLICADO') {
+              <a mat-button color="primary" [routerLink]="['/organizador/check-in', e.id]">
+                <mat-icon>qr_code_scanner</mat-icon> Check-in
+              </a>
+            }
             <a mat-button [routerLink]="['/organizador/eventos', e.id, 'editar']">
               <mat-icon>edit</mat-icon> Editar
             </a>

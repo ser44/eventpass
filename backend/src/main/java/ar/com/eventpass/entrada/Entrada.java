@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import ar.com.eventpass.comun.EntradaAnuladaException;
 import ar.com.eventpass.comun.EntradaYaUsadaException;
 import ar.com.eventpass.comun.TransicionInvalidaException;
 import jakarta.persistence.Column;
@@ -71,7 +72,7 @@ public class Entrada {
             throw new EntradaYaUsadaException(usadaEn);
         }
         if (estado == EstadoEntrada.ANULADA) {
-            throw new TransicionInvalidaException("La entrada está anulada");
+            throw new EntradaAnuladaException();
         }
         this.estado = EstadoEntrada.USADA;
         this.usadaEn = Instant.now(reloj);
