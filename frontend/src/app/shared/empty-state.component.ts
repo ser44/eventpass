@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
   `,
   styles: [`
     .vacio { display: flex; flex-direction: column; align-items: center; gap: 8px;
-             padding: 48px 16px; color: rgba(0,0,0,.6); text-align: center; }
+             padding: 48px 16px; color: var(--texto-tenue); text-align: center; }
     mat-icon { font-size: 48px; width: 48px; height: 48px; }
   `],
 })

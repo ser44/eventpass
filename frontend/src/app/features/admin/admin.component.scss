@@ -1,0 +1,60 @@
+.admin {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.usuario.inactivo {
+  opacity: 0.6;
+}
+
+mat-card-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.datos {
+  display: flex;
+  flex-direction: column;
+}
+
+.nombre {
+  overflow-wrap: anywhere;
+}
+
+.email {
+  color: var(--texto-tenue);
+  font-size: 14px;
+}
+
+.fecha {
+  color: var(--texto-sutil);
+  font-size: 12px;
+}
+
+.controles {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.rol {
+  width: 150px;
+}
+
+/* En celular, cada usuario ocupa el ancho y los controles van debajo. */
+@media (max-width: 599px) {
+  mat-card-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

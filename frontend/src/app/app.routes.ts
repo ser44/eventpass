@@ -61,5 +61,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/organizador/check-in.component').then((m) => m.CheckInComponent),
   },
+  {
+    path: 'admin',
+    canActivate: [roleGuard],
+    data: { roles: ['ADMIN'] },
+    loadComponent: () => import('./features/admin/admin.component').then((m) => m.AdminComponent),
+  },
   { path: '**', redirectTo: '' },
 ];

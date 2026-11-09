@@ -1,0 +1,38 @@
+<div class="admin">
+  <h1>Usuarios</h1>
+
+  @if (cargando()) {
+    <app-loading></app-loading>
+  } @else if (error()) {
+    <app-empty-state icono="error" mensaje="No se pudieron cargar los usuarios."></app-empty-state>
+  } @else if (usuarios().length === 0) {
+    <app-empty-state icono="group" mensaje="No hay usuarios."></app-empty-state>
+  } @else {
+    <div class="lista">
+      @for (u of usuarios(); track u.id) {
+        <mat-card class="usuario" [class.inactivo]="!u.activo">
+          <mat-card-content>
+            <div class="datos">
+              <strong class="nombre">{{ u.nombre }}</strong>
+              <span class="email">{{ u.email }}</span>
+              <span class="fecha">Desde {{ u.creadoEn | date: 'shortDate' }}</span>
+            </div>
+            <div class="controles">
+              <mat-form-field appearance="outline" class="rol">
+                <mat-label>Rol</mat-label>
+                <mat-select [value]="u.rol" (selectionChange)="cambiarRol(u, $event.value)">
+                  @for (r of roles; track r) {
+                    <mat-option [value]="r">{{ r }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <mat-slide-toggle [checked]="u.activo" (change)="cambiarActivo(u, $event.checked)">
+                {{ u.activo ? 'Activo' : 'Inactivo' }}
+              </mat-slide-toggle>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

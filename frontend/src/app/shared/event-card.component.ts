@@ -35,7 +35,7 @@ import { EventoResumen } from '../core/models/evento.model';
     .imagen { width: 100%; height: 150px; object-fit: cover; }
     .cuerpo { flex: 1; }
     .titulo { margin: 0 0 8px; overflow-wrap: anywhere; }
-    .meta { display: flex; align-items: center; gap: 6px; margin: 4px 0; color: rgba(0,0,0,.7); font-size: 14px; }
+    .meta { display: flex; align-items: center; gap: 6px; margin: 4px 0; color: var(--texto-tenue); font-size: 14px; }
     .meta mat-icon { font-size: 18px; width: 18px; height: 18px; }
     .cupo { font-weight: 500; margin-top: 8px; }
     .cupo.agotado { color: #c62828; }

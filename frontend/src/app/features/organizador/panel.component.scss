@@ -33,7 +33,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: rgba(0, 0, 0, 0.7);
+  color: var(--texto-tenue);
   font-size: 14px;
   margin: 4px 0;
 }
@@ -54,7 +54,7 @@
   gap: 12px;
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid var(--borde-sutil);
   font-size: 14px;
 }
 

@@ -1,18 +1,64 @@
-/* Estilos globales. Mobile-first. */
+@use '@angular/material' as mat;
 
+/* Tema M3: claro por defecto, oscuro según prefers-color-scheme (CLAUDE.md §7.4). */
+$eventpass-light: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    plain-family: Roboto,
+    brand-family: Roboto,
+  ),
+  density: (scale: 0),
+));
+
+$eventpass-dark: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+));
+
+html {
+  color-scheme: light;
+  @include mat.all-component-themes($eventpass-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+    @include mat.all-component-colors($eventpass-dark);
+  }
+}
+
+/* Variables de texto que se adaptan al modo claro/oscuro. */
+:root {
+  --texto-tenue: rgba(0, 0, 0, 0.70);
+  --texto-sutil: rgba(0, 0, 0, 0.50);
+  --borde-sutil: rgba(0, 0, 0, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --texto-tenue: rgba(255, 255, 255, 0.70);
+    --texto-sutil: rgba(255, 255, 255, 0.50);
+    --borde-sutil: rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* --- Estilos globales. Mobile-first. --- */
 html, body { height: 100%; }
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-/* Imágenes nunca desbordan su contenedor. */
 img { max-width: 100%; height: auto; }
-
-/* Títulos largos no rompen el layout. */
 h1, h2, h3 { overflow-wrap: anywhere; }
 
-/* Utilidad: contenedor centrado con ancho máximo. */
 .contenedor {
   width: 100%;
   max-width: 1200px;

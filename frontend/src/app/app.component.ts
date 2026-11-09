@@ -43,6 +43,9 @@ export class AppComponent {
     if (u?.rol === 'ORGANIZADOR') {
       items.push({ ruta: '/organizador', texto: 'Mis eventos', icono: 'dashboard' });
     }
+    if (u?.rol === 'ADMIN') {
+      items.push({ ruta: '/admin', texto: 'Admin', icono: 'admin_panel_settings' });
+    }
     return items;
   });
 
