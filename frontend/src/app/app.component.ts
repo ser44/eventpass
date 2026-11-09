@@ -3,7 +3,6 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +15,7 @@ import { AuthService } from './core/auth/auth.service';
   standalone: true,
   imports: [
     RouterOutlet, RouterLink, RouterLinkActive,
-    MatToolbarModule, MatSidenavModule, MatButtonModule, MatIconModule, MatListModule, MatMenuModule,
+    MatSidenavModule, MatButtonModule, MatIconModule, MatListModule, MatMenuModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -47,6 +46,12 @@ export class AppComponent {
       items.push({ ruta: '/admin', texto: 'Admin', icono: 'admin_panel_settings' });
     }
     return items;
+  });
+
+  readonly iniciales = computed(() => {
+    const n = this.auth.usuario()?.nombre ?? '';
+    const ini = n.split(' ').filter(Boolean).slice(0, 2).map((p) => p[0]).join('');
+    return ini.toUpperCase() || '?';
   });
 
   logout(): void {

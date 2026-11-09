@@ -4,43 +4,65 @@
   <app-empty-state icono="error" mensaje="No se encontró el evento."></app-empty-state>
 } @else {
   <div class="detalle">
-    <a mat-button routerLink="/eventos"><mat-icon>arrow_back</mat-icon> Volver</a>
+    <div class="hero" [style.background]="banner()!.bg" [style.color]="banner()!.fg">
+      <button class="volver" (click)="volver()" aria-label="Volver"><mat-icon>arrow_back</mat-icon></button>
+      @if (ultimos()) { <span class="pill">Últimos lugares</span> }
+      <h1>{{ evento()!.titulo }}</h1>
+    </div>
 
-    <mat-card>
-      @if (evento()!.imagenUrl) {
-        <img [src]="evento()!.imagenUrl" [alt]="evento()!.titulo" class="portada" />
-      }
-      <mat-card-content>
-        <h1 class="titulo">{{ evento()!.titulo }}</h1>
-        <mat-chip-set><mat-chip>{{ evento()!.estado }}</mat-chip></mat-chip-set>
-
-        <p class="meta"><mat-icon>place</mat-icon> {{ evento()!.lugar }}</p>
-        <p class="meta"><mat-icon>event</mat-icon> {{ evento()!.fechaInicio | date: 'full' }}</p>
-
-        @if (evento()!.descripcion) {
-          <p class="descripcion">{{ evento()!.descripcion }}</p>
-        }
-
-        <div class="cupo" [class.agotado]="evento()!.cupoDisponible === 0">
-          <mat-icon>confirmation_number</mat-icon>
-          <span>{{ evento()!.cupoDisponible }} de {{ evento()!.cupoTotal }} lugares disponibles</span>
+    <div class="panel">
+      <div class="info">
+        <div class="fila">
+          <span class="ic"><mat-icon>event</mat-icon></span>
+          <div><strong>{{ fechaLarga() }}</strong><span class="sub">{{ hora() }} h</span></div>
         </div>
-      </mat-card-content>
-    </mat-card>
+        <div class="fila">
+          <span class="ic"><mat-icon>place</mat-icon></span>
+          <div><strong>{{ evento()!.lugar }}</strong></div>
+        </div>
+        <div class="fila">
+          <span class="ic"><mat-icon>person</mat-icon></span>
+          <div><strong>Entrada sin costo</strong><span class="sub">máx. 4 por persona</span></div>
+        </div>
+      </div>
+
+      <div class="disp">
+        <div class="disp-top">
+          <span class="disp-lbl">Disponibilidad</span>
+          <span class="disp-num" [class.agotado]="evento()!.cupoDisponible === 0">
+            @if (evento()!.cupoDisponible === 0) { Agotado }
+            @else { Quedan {{ evento()!.cupoDisponible }} de {{ evento()!.cupoTotal }} }
+          </span>
+        </div>
+        <div class="barra"><span [style.width.%]="ocupadoPct()" [class.urgente]="ultimos()"></span></div>
+        <p class="refresco">Se actualiza cada 15 segundos</p>
+      </div>
+
+      @if (evento()!.descripcion) {
+        <section class="sobre">
+          <h2>Sobre el evento</h2>
+          <p>{{ evento()!.descripcion }}</p>
+        </section>
+      }
+    </div>
 
     @if (puedeReservar()) {
       <div class="reservar-barra">
         <div class="selector">
-          <span>Cantidad:</span>
-          <mat-button-toggle-group [value]="cantidad()" (change)="cantidad.set($event.value)" hideSingleSelectionIndicator>
-            @for (n of opciones; track n) {
-              <mat-button-toggle [value]="n">{{ n }}</mat-button-toggle>
-            }
-          </mat-button-toggle-group>
+          <span>Cantidad de entradas</span>
+          <div class="stepper">
+            <button mat-stroked-button (click)="menos()" [disabled]="cantidad() <= 1" aria-label="Menos">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span class="n">{{ cantidad() }}</span>
+            <button mat-stroked-button (click)="mas()" [disabled]="cantidad() >= maximo()" aria-label="Más">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
         </div>
-        <button mat-raised-button color="primary" class="btn-reservar"
+        <button mat-flat-button color="primary" class="btn-reservar"
                 (click)="reservar()" [disabled]="reservando()">
-          <mat-icon>shopping_cart</mat-icon> Reservar
+          Reservar {{ cantidad() }} {{ cantidad() === 1 ? 'entrada' : 'entradas' }}
         </button>
       </div>
     } @else if (evento()!.cupoDisponible === 0) {

@@ -1,85 +1,214 @@
 .detalle {
-  max-width: 800px;
+  max-width: 760px;
   margin: 0 auto;
-  padding-bottom: 88px; /* espacio para la barra sticky en celular */
+  padding-bottom: 96px;
 }
 
-.portada {
-  width: 100%;
-  max-height: 320px;
-  object-fit: cover;
+.hero {
+  position: relative;
+  border-radius: 20px;
+  padding: 24px;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
-.titulo {
-  margin: 8px 0;
-  overflow-wrap: anywhere;
+.hero h1 {
+  margin: 8px 0 0;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 700;
 }
 
-.meta {
+.volver {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.pill {
+  align-self: flex-start;
+  background: #fbe7c6;
+  color: #5b3200;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+
+.panel {
+  padding: 8px 0;
+}
+
+.info {
+  background: var(--ep-surface);
+  border: 1px solid var(--ep-border);
+  border-radius: 18px;
+  padding: 16px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fila {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--texto-tenue);
+  gap: 14px;
 }
 
-.descripcion {
-  margin: 16px 0;
+.ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--ep-primary-tint);
+  color: var(--ep-primary);
+  flex: none;
+}
+
+.fila div {
+  display: flex;
+  flex-direction: column;
+}
+
+.sub {
+  color: var(--texto-tenue);
+  font-size: 14px;
+}
+
+.disp {
+  margin-top: 20px;
+}
+
+.disp-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.disp-lbl {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.disp-num {
+  font-weight: 600;
+  color: var(--ep-primary);
+}
+
+.disp-num.agotado {
+  color: var(--ep-error);
+}
+
+.barra {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ep-border);
+  overflow: hidden;
+  margin: 8px 0 6px;
+}
+
+.barra span {
+  display: block;
+  height: 100%;
+  background: var(--ep-primary);
+}
+
+.barra span.urgente {
+  background: #b45309;
+}
+
+.refresco {
+  margin: 0;
+  color: var(--texto-sutil);
+  font-size: 13px;
+}
+
+.sobre {
+  margin-top: 22px;
+}
+
+.sobre h2 {
+  font-size: 1.15rem;
+  margin: 0 0 8px;
+}
+
+.sobre p {
+  margin: 0;
   white-space: pre-line;
   overflow-wrap: anywhere;
-}
-
-.cupo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 18px;
-  font-weight: 500;
-  margin-top: 16px;
-}
-
-.cupo.agotado {
-  color: #c62828;
+  line-height: 1.6;
 }
 
 .reservar-barra {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  background: var(--ep-surface);
+  border-top: 1px solid var(--ep-border);
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 16px;
-  flex-wrap: wrap;
-  margin-top: 16px;
-  padding: 12px 0;
+  max-width: 760px;
+  margin: 0 auto;
 }
 
 .selector {
   display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stepper {
+  display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+}
+
+.stepper .n {
+  font-size: 1.2rem;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
 }
 
 .btn-reservar {
-  min-height: 48px;
+  flex: 1;
+  min-height: 52px;
+  font-weight: 600;
 }
 
 .agotado-aviso {
   margin-top: 16px;
-  color: #c62828;
+  color: var(--ep-error);
   font-weight: 500;
 }
 
-/* En celular, la barra de reserva queda fija abajo (sticky) y a lo ancho. */
 @media (max-width: 599px) {
   .reservar-barra {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--mat-sys-surface, #fff);
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
-    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-    z-index: 5;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
   }
-  .btn-reservar {
-    flex: 1;
+  .selector {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 }

@@ -1,45 +1,97 @@
 .layout {
-  height: 100vh;
+  min-height: 100vh;
+  background: var(--ep-bg);
 }
 
 .sidenav {
-  width: 240px;
+  width: 250px;
 }
 
-.toolbar {
+.topbar {
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background: var(--ep-surface);
+  border-bottom: 1px solid var(--ep-border);
 }
 
-.titulo {
+.logo {
+  font: 700 20px/1 'Space Grotesk', sans-serif;
+  color: var(--ep-ink);
+  text-decoration: none;
+  margin-right: 8px;
+}
+
+.logo span {
+  color: var(--ep-primary);
+}
+
+.nav {
+  display: flex;
+  gap: 4px;
+}
+
+.pill {
+  padding: 7px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--texto-tenue);
   font-weight: 500;
+  font-size: 14px;
+}
+
+.pill:hover {
+  background: var(--ep-primary-tint);
+  color: var(--ep-primary);
+}
+
+.pill.activo {
+  background: var(--ep-primary-tint);
+  color: var(--ep-primary);
+  font-weight: 600;
 }
 
 .spacer {
   flex: 1 1 auto;
 }
 
-.contenido {
-  padding: 16px;
+.userbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.uname {
+  color: var(--ep-ink);
+  font-weight: 500;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--ep-primary);
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.menu-rol {
+  font-size: 12px;
+  opacity: 0.7;
 }
 
 .activo {
   font-weight: 700;
 }
 
-.nombre-usuario {
-  margin-left: 4px;
-}
-
-/* En pantallas muy chicas, el nombre se oculta y queda solo el ícono. */
-@media (max-width: 400px) {
-  .nombre-usuario {
-    display: none;
-  }
-}
-
-.menu-rol {
-  font-size: 12px;
-  opacity: 0.7;
+.contenido {
+  padding: 24px 20px 40px;
 }

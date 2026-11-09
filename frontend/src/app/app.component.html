@@ -1,50 +1,62 @@
 <mat-sidenav-container class="layout">
-  <mat-sidenav
-    #snav
-    [mode]="esCompacto() ? 'over' : 'side'"
-    [opened]="!esCompacto()"
-    class="sidenav">
+  <mat-sidenav #snav mode="over" [opened]="false" class="sidenav">
     <mat-nav-list>
       @for (link of links(); track link.ruta) {
-        <a
-          mat-list-item
-          [routerLink]="link.ruta"
-          routerLinkActive="activo"
-          (click)="esCompacto() && snav.close()">
+        <a mat-list-item [routerLink]="link.ruta" routerLinkActive="activo" (click)="snav.close()">
           <mat-icon matListItemIcon>{{ link.icono }}</mat-icon>
           <span matListItemTitle>{{ link.texto }}</span>
+        </a>
+      }
+      @if (!auth.estaAutenticado()) {
+        <a mat-list-item routerLink="/login" (click)="snav.close()">
+          <mat-icon matListItemIcon>login</mat-icon><span matListItemTitle>Ingresar</span>
+        </a>
+        <a mat-list-item routerLink="/registro" (click)="snav.close()">
+          <mat-icon matListItemIcon>person_add</mat-icon><span matListItemTitle>Registrarse</span>
+        </a>
+      } @else {
+        <a mat-list-item (click)="logout(); snav.close()">
+          <mat-icon matListItemIcon>logout</mat-icon><span matListItemTitle>Salir</span>
         </a>
       }
     </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <mat-toolbar color="primary" class="toolbar">
+    <header class="topbar">
       @if (esCompacto()) {
         <button mat-icon-button aria-label="Abrir menú" (click)="snav.toggle()">
           <mat-icon>menu</mat-icon>
         </button>
       }
-      <span class="titulo">EventPass</span>
+      <a routerLink="/" class="logo">Event<span>Pass</span></a>
+
+      @if (!esCompacto()) {
+        <nav class="nav">
+          @for (link of links(); track link.ruta) {
+            <a [routerLink]="link.ruta" routerLinkActive="activo" class="pill">{{ link.texto }}</a>
+          }
+        </nav>
+      }
+
       <span class="spacer"></span>
 
       @if (auth.estaAutenticado()) {
-        <button mat-button [matMenuTriggerFor]="menu" aria-label="Menú de usuario">
-          <mat-icon>account_circle</mat-icon>
-          <span class="nombre-usuario">{{ auth.usuario()?.nombre }}</span>
+        <button mat-button [matMenuTriggerFor]="menu" class="userbtn" aria-label="Menú de usuario">
+          @if (!esCompacto()) { <span class="uname">{{ auth.usuario()?.nombre }}</span> }
+          <span class="avatar">{{ iniciales() }}</span>
         </button>
         <mat-menu #menu="matMenu">
-          <div class="menu-rol" mat-menu-item disabled>{{ auth.usuario()?.rol }}</div>
+          <div mat-menu-item disabled class="menu-rol">{{ auth.usuario()?.rol }}</div>
           <button mat-menu-item (click)="logout()">
-            <mat-icon>logout</mat-icon>
-            <span>Salir</span>
+            <mat-icon>logout</mat-icon><span>Salir</span>
           </button>
         </mat-menu>
-      } @else {
-        <a mat-button routerLink="/login">Ingresar</a>
-        <a mat-button routerLink="/registro">Registrarse</a>
+      } @else if (!esCompacto()) {
+        <a mat-stroked-button routerLink="/login">Ingresar</a>
+        <a mat-flat-button color="primary" routerLink="/registro">Registrarse</a>
       }
-    </mat-toolbar>
+    </header>
 
     <main class="contenido">
       <router-outlet></router-outlet>

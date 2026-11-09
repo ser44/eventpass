@@ -1,63 +1,72 @@
 @use '@angular/material' as mat;
+@use './m3-theme' as tema;
 
-/* Tema M3: claro por defecto, oscuro según prefers-color-scheme (CLAUDE.md §7.4). */
-$eventpass-light: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$azure-palette,
-    tertiary: mat.$blue-palette,
-  ),
-  typography: (
-    plain-family: Roboto,
-    brand-family: Roboto,
-  ),
-  density: (scale: 0),
-));
-
-$eventpass-dark: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: mat.$azure-palette,
-    tertiary: mat.$blue-palette,
-  ),
-));
-
+/* Tema M3 EventPass (paleta violeta generada desde #5B2DCB): claro + oscuro. */
 html {
   color-scheme: light;
-  @include mat.all-component-themes($eventpass-light);
+  @include mat.all-component-themes(tema.$light-theme);
 }
 
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
-    @include mat.all-component-colors($eventpass-dark);
+    @include mat.all-component-colors(tema.$dark-theme);
   }
 }
 
-/* Variables de texto que se adaptan al modo claro/oscuro. */
+/* Tokens de marca (de los mockups). */
 :root {
-  --texto-tenue: rgba(0, 0, 0, 0.70);
-  --texto-sutil: rgba(0, 0, 0, 0.50);
-  --borde-sutil: rgba(0, 0, 0, 0.12);
+  --ep-primary: #5b2dcb;
+  --ep-primary-dark: #3f1d96;
+  --ep-primary-tint: #ece6fb;
+  --ep-ink: #17151f;
+  --ep-muted: #5a5768;
+  --ep-bg: #f5f4fa;
+  --ep-surface: #ffffff;
+  --ep-border: #e4e1ee;
+  --ep-exito: #0f6b37;
+  --ep-exito-bg: #e7f6ec;
+  --ep-error: #a3201a;
+  --ep-error-bg: #fde7e4;
+  --radio-card: 18px;
+
+  /* Aliases que ya usan los componentes. */
+  --texto-tenue: var(--ep-muted);
+  --texto-sutil: #8b8896;
+  --borde-sutil: var(--ep-border);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --texto-tenue: rgba(255, 255, 255, 0.70);
-    --texto-sutil: rgba(255, 255, 255, 0.50);
-    --borde-sutil: rgba(255, 255, 255, 0.12);
+    --ep-primary-tint: #2a2140;
+    --ep-ink: #ece9f3;
+    --ep-muted: #b4b0c0;
+    --ep-bg: #141019;
+    --ep-surface: #1e1a26;
+    --ep-border: #2e2a3a;
+    --ep-exito-bg: #11301d;
+    --ep-error-bg: #3a1513;
+    --texto-tenue: var(--ep-muted);
+    --texto-sutil: #8f8b9c;
+    --borde-sutil: var(--ep-border);
   }
 }
 
-/* --- Estilos globales. Mobile-first. --- */
+/* --- Globales. Mobile-first. --- */
 html, body { height: 100%; }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--ep-bg);
+  color: var(--ep-ink);
+}
+
+h1, h2, h3 {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  overflow-wrap: anywhere;
 }
 
 img { max-width: 100%; height: auto; }
-h1, h2, h3 { overflow-wrap: anywhere; }
 
 .contenedor {
   width: 100%;
@@ -65,4 +74,9 @@ h1, h2, h3 { overflow-wrap: anywhere; }
   margin: 0 auto;
   padding: 16px;
   box-sizing: border-box;
+}
+
+/* Cards con el radio de la marca. */
+.mat-mdc-card {
+  border-radius: var(--radio-card) !important;
 }

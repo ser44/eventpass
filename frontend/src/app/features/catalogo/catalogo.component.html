@@ -1,11 +1,15 @@
 <div class="catalogo">
-  <h1>Eventos</h1>
-
-  <mat-form-field appearance="outline" class="buscador">
-    <mat-label>Buscar por título</mat-label>
-    <input matInput [formControl]="busqueda" />
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
+  <header class="hero">
+    <div class="hero-txt">
+      <h1>Próximos eventos</h1>
+      <p>Reservá tu lugar y recibí la entrada con QR al instante.</p>
+    </div>
+    <mat-form-field appearance="outline" class="buscador">
+      <mat-label>Buscar evento o lugar</mat-label>
+      <input matInput [formControl]="busqueda" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </header>
 
   @if (cargando()) {
     <app-loading></app-loading>
