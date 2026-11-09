@@ -1,5 +1,5 @@
 .panel {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
 }
 
@@ -9,17 +9,18 @@
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
+  margin-bottom: 16px;
 }
 
 .lista {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .fila {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
 }
@@ -35,7 +36,7 @@
   gap: 6px;
   color: var(--texto-tenue);
   font-size: 14px;
-  margin: 4px 0;
+  margin: 4px 0 0;
 }
 
 .meta mat-icon {
@@ -44,25 +45,83 @@
   height: 18px;
 }
 
-.acciones {
-  flex-wrap: wrap;
+.sep {
+  opacity: 0.5;
 }
 
-.stats {
+.chip {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.estado-PUBLICADO { background: #0f6b37; }
+.estado-BORRADOR { background: #b45309; }
+.estado-CANCELADO { background: #a3201a; }
+.estado-FINALIZADO { background: #5a5768; }
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 14px;
+  border: 1px solid var(--ep-border);
+  border-radius: 14px;
+  background: var(--ep-bg);
+}
+
+.tile .n {
+  font: 700 26px/1 'Space Grotesk', sans-serif;
+}
+
+.tile .n.v { color: var(--ep-primary); }
+.tile .n.o { color: #b45309; }
+.tile .n.g { color: #0f6b37; }
+
+.tile .l {
+  color: var(--texto-tenue);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.ocupacion {
+  display: flex;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--ep-border);
+  margin-top: 16px;
+}
+
+.seg {
+  height: 100%;
+}
+
+.seg.g { background: #0f6b37; }
+.seg.v { background: var(--ep-primary); }
+
+.leyenda {
+  font-size: 13px;
+  color: var(--texto-tenue);
+  margin: 8px 0 0;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--borde-sutil);
-  font-size: 14px;
 }
 
-.stats strong {
-  font-size: 16px;
-}
+.leyenda b.g { color: #0f6b37; }
+.leyenda b.v { color: var(--ep-primary); }
+.leyenda b.d { color: #cac4d1; }
 
-.estado-PUBLICADO { background: #0f6b37; color: #fff; }
-.estado-BORRADOR { background: #b45309; color: #fff; }
-.estado-CANCELADO { background: #a3201a; color: #fff; }
-.estado-FINALIZADO { background: #5a5768; color: #fff; }
+.acciones {
+  flex-wrap: wrap;
+}

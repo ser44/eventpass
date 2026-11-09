@@ -1,17 +1,10 @@
 @use '@angular/material' as mat;
 @use './m3-theme' as tema;
 
-/* Tema M3 EventPass (paleta violeta generada desde #5B2DCB): claro + oscuro. */
+/* Tema M3 EventPass (paleta violeta generada desde #5B2DCB). Solo claro. */
 html {
   color-scheme: light;
   @include mat.all-component-themes(tema.$light-theme);
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-    @include mat.all-component-colors(tema.$dark-theme);
-  }
 }
 
 /* Tokens de marca (de los mockups). */
@@ -34,22 +27,6 @@ html {
   --texto-tenue: var(--ep-muted);
   --texto-sutil: #8b8896;
   --borde-sutil: var(--ep-border);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ep-primary-tint: #2a2140;
-    --ep-ink: #ece9f3;
-    --ep-muted: #b4b0c0;
-    --ep-bg: #141019;
-    --ep-surface: #1e1a26;
-    --ep-border: #2e2a3a;
-    --ep-exito-bg: #11301d;
-    --ep-error-bg: #3a1513;
-    --texto-tenue: var(--ep-muted);
-    --texto-sutil: #8f8b9c;
-    --borde-sutil: var(--ep-border);
-  }
 }
 
 /* --- Globales. Mobile-first. --- */

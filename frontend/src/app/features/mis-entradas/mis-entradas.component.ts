@@ -1,34 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ReservaService } from '../../core/reservas/reserva.service';
 import { Entrada } from '../../core/models/reserva.model';
 import { LoadingComponent } from '../../shared/loading.component';
 import { EmptyStateComponent } from '../../shared/empty-state.component';
-import { QrViewComponent } from '../../shared/qr-view.component';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog.component';
-
-interface GrupoReserva {
-  reservaId: string;
-  eventoTitulo: string;
-  eventoFecha: string;
-  eventoLugar: string;
-  entradas: Entrada[];
-  cancelable: boolean;
-}
+import { GrupoReserva, TicketGroupComponent } from '../../shared/ticket-group.component';
 
 @Component({
   selector: 'app-mis-entradas',
   standalone: true,
-  imports: [
-    DatePipe, MatCardModule, MatButtonModule, MatIconModule, MatChipsModule,
-    LoadingComponent, EmptyStateComponent, QrViewComponent,
-  ],
+  imports: [LoadingComponent, EmptyStateComponent, TicketGroupComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './mis-entradas.component.html',
   styleUrl: './mis-entradas.component.scss',
@@ -51,6 +34,7 @@ export class MisEntradasComponent implements OnInit {
     }
     return Array.from(porReserva.entries()).map(([reservaId, entradas]) => ({
       reservaId,
+      eventoId: entradas[0].eventoId,
       eventoTitulo: entradas[0].eventoTitulo,
       eventoFecha: entradas[0].eventoFecha,
       eventoLugar: entradas[0].eventoLugar,

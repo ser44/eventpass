@@ -16,6 +16,13 @@
   margin-top: 8px;
 }
 
+.form button[type='submit'] {
+  width: 100%;
+  min-height: 48px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
 mat-card-actions {
   display: flex;
   align-items: center;

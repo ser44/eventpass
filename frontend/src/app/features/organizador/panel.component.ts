@@ -37,6 +37,10 @@ export class PanelComponent implements OnInit {
   readonly error = signal(false);
   readonly stats = signal<Record<string, Stats>>({});
 
+  pct(parte: number, total: number): number {
+    return total ? Math.round((parte / total) * 100) : 0;
+  }
+
   verStats(e: EventoResumen): void {
     if (this.stats()[e.id]) {
       const copia = { ...this.stats() };

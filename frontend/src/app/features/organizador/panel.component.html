@@ -1,7 +1,7 @@
 <div class="panel">
   <div class="encabezado">
     <h1>Mis eventos</h1>
-    <a mat-raised-button color="primary" routerLink="/organizador/eventos/nuevo">
+    <a mat-flat-button color="primary" routerLink="/organizador/eventos/nuevo">
       <mat-icon>add</mat-icon> Nuevo evento
     </a>
   </div>
@@ -18,23 +18,37 @@
         <mat-card class="item">
           <mat-card-content>
             <div class="fila">
-              <h3 class="titulo">{{ e.titulo }}</h3>
-              <mat-chip [class]="'estado-' + e.estado">{{ e.estado }}</mat-chip>
+              <div class="izq">
+                <h3 class="titulo">{{ e.titulo }}</h3>
+                <p class="meta">
+                  <mat-icon>event</mat-icon> {{ e.fechaInicio | date: 'short' }}
+                  <span class="sep">·</span> {{ e.cupoTotal - e.cupoDisponible }} / {{ e.cupoTotal }} vendidas
+                </p>
+              </div>
+              <span class="chip" [class]="'estado-' + e.estado">{{ e.estado }}</span>
             </div>
-            <p class="meta"><mat-icon>event</mat-icon> {{ e.fechaInicio | date: 'medium' }}</p>
-            <p class="meta"><mat-icon>confirmation_number</mat-icon>
-              {{ e.cupoDisponible }} / {{ e.cupoTotal }} lugares</p>
 
             @if (stats()[e.id]; as s) {
-              <div class="stats">
-                <span><strong>{{ s.vendidas }}</strong> vendidas</span>
-                <span><strong>{{ s.retenidas }}</strong> retenidas</span>
-                <span><strong>{{ s.ingresadas }}</strong> ingresadas</span>
-                <span><strong>{{ s.canceladas }}</strong> canceladas</span>
-                <span><strong>{{ s.disponibles }}</strong> disponibles</span>
+              <div class="tiles">
+                <div class="tile"><span class="n">{{ s.cupoTotal }}</span><span class="l">Cupo total</span></div>
+                <div class="tile"><span class="n v">{{ s.vendidas }}</span><span class="l">Emitidas</span></div>
+                <div class="tile"><span class="n">{{ s.retenidas }}</span><span class="l">Pendientes</span></div>
+                <div class="tile"><span class="n o">{{ s.disponibles }}</span><span class="l">Disponibles</span></div>
+                <div class="tile"><span class="n g">{{ s.ingresadas }}</span><span class="l">Ingresaron</span></div>
+                <div class="tile"><span class="n">{{ s.canceladas }}</span><span class="l">Canceladas</span></div>
               </div>
+              <div class="ocupacion">
+                <span class="seg g" [style.width.%]="pct(s.ingresadas, s.cupoTotal)"></span>
+                <span class="seg v" [style.width.%]="pct(s.vendidas - s.ingresadas, s.cupoTotal)"></span>
+              </div>
+              <p class="leyenda">
+                <b class="g">●</b> Ingresaron ({{ s.ingresadas }})
+                <b class="v">●</b> Emitidas sin ingresar ({{ s.vendidas - s.ingresadas }})
+                <b class="d">●</b> Disponibles ({{ s.disponibles }})
+              </p>
             }
           </mat-card-content>
+
           <mat-card-actions align="end" class="acciones">
             <button mat-button (click)="verStats(e)">
               <mat-icon>bar_chart</mat-icon> {{ stats()[e.id] ? 'Ocultar' : 'Estadísticas' }}

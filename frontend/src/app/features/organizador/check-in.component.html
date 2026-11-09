@@ -1,20 +1,43 @@
-<div class="checkin">
-  @if (estado() === 'ok') {
-    <div class="resultado verde">
-      <mat-icon>check_circle</mat-icon>
-      <h1>Entrada válida</h1>
-      @if (titular()) { <p class="titular">{{ titular() }}</p> }
+<div class="checkin" [class.ok]="estado() === 'ok'" [class.error]="estado() === 'error'">
+  <header class="barra-sup">
+    <button class="volver" (click)="salir()" aria-label="Salir">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="titulo">
+      <span class="label">CHECK-IN</span>
+      <strong>{{ tituloEvento() || 'Evento' }}</strong>
     </div>
-  } @else if (estado() === 'error') {
-    <div class="resultado rojo">
-      <mat-icon>cancel</mat-icon>
-      <h1>{{ mensajeError() }}</h1>
-    </div>
-  } @else {
-    <div class="escaner">
-      <div class="barra-sup">
-        <a mat-icon-button routerLink="/organizador" aria-label="Volver"><mat-icon>arrow_back</mat-icon></a>
-        <span>Check-in</span>
+    <span class="ingresos">{{ ingresadas() }} / {{ emitidas() }} ingresos</span>
+  </header>
+
+  <div class="centro">
+    @switch (estado()) {
+      @case ('ok') {
+        <div class="resultado">
+          <div class="circulo"><mat-icon>check</mat-icon></div>
+          <h1>Entrada válida</h1>
+          @if (titular()) { <p class="sub">{{ titular() }}</p> }
+          <code class="cod">{{ codigoValidado() }}</code>
+          <p class="volver-txt">Volviendo a escanear en {{ segundos() }} s…</p>
+        </div>
+      }
+      @case ('error') {
+        <div class="resultado">
+          <div class="circulo"><mat-icon>close</mat-icon></div>
+          <h1>{{ mensajeError() }}</h1>
+          <code class="cod">{{ codigoValidado() }}</code>
+          <p class="volver-txt">Volviendo a escanear en {{ segundos() }} s…</p>
+        </div>
+      }
+      @default {
+        <zxing-scanner
+          class="camara"
+          [formats]="formats"
+          [device]="camaraActual()"
+          (camerasFound)="onCamaras($event)"
+          (scanSuccess)="onScan($event)">
+        </zxing-scanner>
+        @if (estado() === 'validando') { <div class="validando">Validando…</div> }
         @if (camaras().length > 1) {
           <select class="sel-camara" (change)="cambiarCamara($any($event.target).value)">
             @for (c of camaras(); track c.deviceId) {
@@ -24,27 +47,15 @@
             }
           </select>
         }
-      </div>
-
-      <zxing-scanner
-        class="camara"
-        [formats]="formats"
-        [device]="camaraActual()"
-        (camerasFound)="onCamaras($event)"
-        (scanSuccess)="onScan($event)">
-      </zxing-scanner>
-
-      @if (estado() === 'validando') {
-        <div class="validando">Validando…</div>
       }
+    }
+  </div>
 
-      <form class="manual" (ngSubmit)="validarManual()">
-        <mat-form-field appearance="outline" class="campo">
-          <mat-label>Ingresar código manual</mat-label>
-          <input matInput name="codigo" [(ngModel)]="codigoManual" placeholder="EVP-XXXX-XXXX-XXXX" />
-        </mat-form-field>
-        <button mat-raised-button color="primary" type="submit">Validar</button>
-      </form>
+  <form class="manual" (ngSubmit)="validarManual()">
+    <label>¿No funciona la cámara? Ingresá el código</label>
+    <div class="campo">
+      <input name="codigo" [(ngModel)]="codigoManual" placeholder="EVP-XXXX-XXXX-XXXX" autocomplete="off" />
+      <button type="submit">Validar</button>
     </div>
-  }
+  </form>
 </div>

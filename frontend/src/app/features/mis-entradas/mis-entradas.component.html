@@ -9,36 +9,7 @@
     <app-empty-state icono="confirmation_number" mensaje="Todavía no tenés entradas."></app-empty-state>
   } @else {
     @for (g of grupos(); track g.reservaId) {
-      <mat-card class="grupo">
-        <mat-card-header>
-          <mat-card-title>{{ g.eventoTitulo }}</mat-card-title>
-          <mat-card-subtitle>{{ g.eventoFecha | date: 'medium' }} · {{ g.eventoLugar }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="entradas">
-            @for (e of g.entradas; track e.id) {
-              <div class="entrada">
-                @if (e.estado === 'VALIDA') {
-                  <app-qr-view [codigo]="e.codigo"></app-qr-view>
-                } @else {
-                  <div class="qr-inactivo">
-                    <mat-icon>block</mat-icon>
-                    <code>{{ e.codigo }}</code>
-                  </div>
-                }
-                <mat-chip [class]="'estado-' + e.estado">{{ e.estado }}</mat-chip>
-              </div>
-            }
-          </div>
-        </mat-card-content>
-        @if (g.cancelable) {
-          <mat-card-actions align="end">
-            <button mat-button color="warn" (click)="cancelar(g)">
-              <mat-icon>cancel</mat-icon> Cancelar reserva
-            </button>
-          </mat-card-actions>
-        }
-      </mat-card>
+      <app-ticket-group [grupo]="g" (cancelar)="cancelar(g)"></app-ticket-group>
     }
   }
 </div>

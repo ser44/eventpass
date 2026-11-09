@@ -1,43 +1,8 @@
 .mis-entradas {
-  max-width: 900px;
+  max-width: 560px;
   margin: 0 auto;
 }
 
-.grupo {
-  margin-bottom: 16px;
+.mis-entradas h1 {
+  margin: 0 0 16px;
 }
-
-.entradas {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
-  margin-top: 8px;
-}
-
-.entrada {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.qr-inactivo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 40px 12px;
-  background: #f5f5f5;
-  border-radius: 8px;
-  opacity: 0.6;
-}
-
-.qr-inactivo mat-icon {
-  font-size: 48px;
-  width: 48px;
-  height: 48px;
-}
-
-.estado-VALIDA { background: #0f6b37; color: #fff; }
-.estado-USADA { background: #5a5768; color: #fff; }
-.estado-ANULADA { background: #a3201a; color: #fff; }
