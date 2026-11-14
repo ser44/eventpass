@@ -1,20 +1,41 @@
 # Override de DESARROLLO (se aplica solo con `docker compose up`, no en prod).
 # Agrega Mailpit y expone puertos internos para depurar.
+# services:
+
+#   db:
+#     ports:
+#       - "5432:5432"   # Postgres accesible desde la PC (DBeaver, psql, etc.)
+
+#   api:
+#     ports:
+#       - "8080:8080"   # API directa, sin pasar por nginx
+#     environment:
+#       SPRING_PROFILES_ACTIVE: dev   # logs legibles + DataSeeder (usuarios semilla)
+
+#   mailpit:
+#     image: axllent/mailpit
+#     ports:
+#       - "8025:8025"   # UI web de Mailpit
+#       - "1025:1025"   # SMTP falso
+#     restart: unless-stopped
+
+# Override de DESARROLLO
+# Agrega Mailpit y expone puertos internos para depurar.
 services:
 
   db:
     ports:
-      - "5432:5432"   # Postgres accesible desde la PC (DBeaver, psql, etc.)
+      - "127.0.0.1:5433:5432"  # PostgreSQL Docker accesible desde DBeaver
 
   api:
     ports:
-      - "8080:8080"   # API directa, sin pasar por nginx
+      - "8080:8080"
     environment:
-      SPRING_PROFILES_ACTIVE: dev   # logs legibles + DataSeeder (usuarios semilla)
+      SPRING_PROFILES_ACTIVE: dev
 
   mailpit:
     image: axllent/mailpit
     ports:
-      - "8025:8025"   # UI web de Mailpit
-      - "1025:1025"   # SMTP falso
+      - "8025:8025"
+      - "1025:1025"
     restart: unless-stopped

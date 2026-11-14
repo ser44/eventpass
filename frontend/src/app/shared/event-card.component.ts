@@ -1,16 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MatRippleModule } from '@angular/material/core';
 import { EventoResumen } from '../core/models/evento.model';
 import { bannerPara, diaDe, horaDe, mesCorto } from './banner.util';
 
 @Component({
   selector: 'app-event-card',
   standalone: true,
-  imports: [RouterLink, MatRippleModule],
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <a class="card" matRipple [routerLink]="['/eventos', evento().id]">
+    <a class="card" [routerLink]="['/eventos', evento().id]">
       <div class="banner" [style.background]="banner().bg" [style.color]="banner().fg">
         <span class="mes">{{ mes() }}</span>
         <span class="dia">{{ dia() }}</span>

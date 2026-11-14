@@ -4,6 +4,7 @@
 /* Tema M3 EventPass (paleta violeta generada desde #5B2DCB). Solo claro. */
 html {
   color-scheme: light;
+  @include mat.core();
   @include mat.all-component-themes(tema.$light-theme);
 }
 
