@@ -3,3 +3,6 @@
 # Escucha en 8081 para que Prometheus lo scrapee en worker:8081/api/v1/actuator/prometheus.
 server:
   port: 8081
+
+app:
+  servicio: worker

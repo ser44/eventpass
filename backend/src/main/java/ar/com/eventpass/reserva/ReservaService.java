@@ -9,6 +9,9 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -17,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ar.com.eventpass.comun.CupoAgotadoException;
+import ar.com.eventpass.comun.DominioException;
 import ar.com.eventpass.comun.EventoNoReservableException;
+import ar.com.eventpass.comun.MetricasNegocio;
 import ar.com.eventpass.comun.RecursoNoEncontradoException;
 import ar.com.eventpass.entrada.Entrada;
 import ar.com.eventpass.entrada.EntradaRepository;
@@ -39,6 +44,8 @@ import ar.com.eventpass.usuario.dto.UsuarioDto;
 @Service
 public class ReservaService {
 
+    private static final Logger log = LoggerFactory.getLogger(ReservaService.class);
+
     private final ReservaRepository reservaRepo;
     private final EntradaRepository entradaRepo;
     private final EventoRepository eventoRepo;
@@ -47,13 +54,14 @@ public class ReservaService {
     private final ApplicationEventPublisher eventos;
     private final ObjectMapper json;
     private final Clock clock;
+    private final MetricasNegocio metricas;
     private final int ttlMinutos;
     private final int cancelacionHoras;
 
     public ReservaService(ReservaRepository reservaRepo, EntradaRepository entradaRepo,
                           EventoRepository eventoRepo, IdempotenciaService idempotencia,
                           UsuarioService usuarioService, ApplicationEventPublisher eventos,
-                          ObjectMapper json, Clock clock,
+                          ObjectMapper json, Clock clock, MetricasNegocio metricas,
                           @Value("${app.reserva.ttl-minutos}") int ttlMinutos,
                           @Value("${app.reserva.cancelacion-horas}") int cancelacionHoras) {
         this.reservaRepo = reservaRepo;
@@ -64,6 +72,7 @@ public class ReservaService {
         this.eventos = eventos;
         this.json = json;
         this.clock = clock;
+        this.metricas = metricas;
         this.ttlMinutos = ttlMinutos;
         this.cancelacionHoras = cancelacionHoras;
     }
@@ -76,7 +85,15 @@ public class ReservaService {
                 return deserializar(guardada.get());
             }
         }
-        ReservaDto dto = hacerReserva(eventoId, usuarioId, cantidad);
+        ReservaDto dto;
+        try {
+            dto = hacerReserva(eventoId, usuarioId, cantidad);
+        } catch (DominioException ex) {
+            throw ex; // ya taggeado en hacerReserva (sin_cupo / no_reservable)
+        } catch (RuntimeException ex) {
+            metricas.reserva("error");
+            throw ex;
+        }
         if (idempotencyKey != null && !idempotencyKey.isBlank()) {
             idempotencia.guardar(idempotencyKey, usuarioId,
                 "POST /events/{id}/reservations", 201, serializar(dto));
@@ -91,12 +108,26 @@ public class ReservaService {
             Evento e = eventoRepo.findById(eventoId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("evento " + eventoId));
             if (e.getEstado() != EstadoEvento.PUBLICADO || !e.getFechaInicio().isAfter(Instant.now(clock))) {
+                metricas.reserva("no_reservable");
+                try (var c = MDC.putCloseable("motivo", "NO_RESERVABLE")) {
+                    log.warn("Reserva rechazada: evento {} no es reservable", eventoId);
+                }
                 throw new EventoNoReservableException();
+            }
+            metricas.reserva("sin_cupo");
+            try (var c = MDC.putCloseable("motivo", "SIN_CUPO")) {
+                log.warn("Reserva rechazada: sin cupo para el evento {} (pidieron {})", eventoId, cantidad);
             }
             throw new CupoAgotadoException(e.getCupoDisponible());
         }
         Reserva r = new Reserva(eventoId, usuarioId, cantidad, clock, ttlMinutos);
         reservaRepo.save(r);
+        metricas.reserva("ok");
+        try (var c1 = MDC.putCloseable("eventoId", eventoId.toString());
+             var c2 = MDC.putCloseable("reservaId", r.getId().toString());
+             var c3 = MDC.putCloseable("accion", "RESERVA_CREADA")) {
+            log.info("Reserva creada: {} entradas para el evento {}", cantidad, eventoId);
+        }
         String titulo = eventoRepo.findById(eventoId).map(Evento::getTitulo).orElse(null);
         return new ReservaDto(r.getId(), eventoId, titulo, cantidad, r.getEstado(), r.getExpiraEn(), r.getCreadaEn());
     }
@@ -113,6 +144,10 @@ public class ReservaService {
         // Observer + Outbox: el listener inserta el mensaje en esta misma transacción.
         eventos.publishEvent(new ReservaConfirmadaEvent(r.getId(), u.email(), u.nombre(),
             tituloDe(e), e == null ? null : e.getFechaInicio(), e == null ? null : e.getLugar(), codigos));
+        try (var c1 = MDC.putCloseable("reservaId", reservaId.toString());
+             var c2 = MDC.putCloseable("accion", "RESERVA_CONFIRMADA")) {
+            log.info("Reserva confirmada: {} entradas emitidas", entradas.size());
+        }
         List<EntradaDto> dtos = entradas.stream().map(en -> aEntradaDto(en, e)).toList();
         return new ReservaConfirmadaDto(r.getId(), r.getEventoId(), tituloDe(e), r.getEstado(), dtos);
     }
@@ -131,6 +166,10 @@ public class ReservaService {
         UsuarioDto u = usuarioService.buscarPorId(usuarioId);
         eventos.publishEvent(new ReservaCanceladaEvent(r.getId(), u.email(), u.nombre(),
             e.getTitulo(), e.getFechaInicio(), e.getLugar()));
+        try (var c1 = MDC.putCloseable("reservaId", reservaId.toString());
+             var c2 = MDC.putCloseable("accion", "RESERVA_CANCELADA")) {
+            log.info("Reserva cancelada");
+        }
     }
 
     @Transactional(readOnly = true)

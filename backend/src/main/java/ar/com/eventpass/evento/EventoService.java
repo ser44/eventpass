@@ -5,6 +5,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,8 @@ import ar.com.eventpass.evento.dto.EventoResumenDto;
 
 @Service
 public class EventoService {
+
+    private static final Logger log = LoggerFactory.getLogger(EventoService.class);
 
     private final EventoRepository repo;
     private final EventoMapper mapper;
@@ -53,7 +58,12 @@ public class EventoService {
     public EventoDto publicar(UUID id, UUID usuarioId, boolean esAdmin) {
         Evento e = cargarPropio(id, usuarioId, esAdmin);
         e.publicar(clock);
-        return mapper.aDto(repo.save(e));
+        EventoDto dto = mapper.aDto(repo.save(e));
+        try (var c1 = MDC.putCloseable("eventoId", id.toString());
+             var c2 = MDC.putCloseable("accion", "EVENTO_PUBLICADO")) {
+            log.info("Evento publicado: {}", e.getTitulo());
+        }
+        return dto;
     }
 
     @Transactional

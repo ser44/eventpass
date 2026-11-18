@@ -35,6 +35,13 @@ public interface EventoRepository extends JpaRepository<Evento, UUID> {
 
     List<Evento> findByOrganizadorIdOrderByCreadoEnDesc(UUID organizadorId);
 
+    /** Todos los publicados y futuros, sin paginar: alimenta el gauge eventpass_cupo_disponible. */
+    @Query("""
+        select e from Evento e
+        where e.estado = ar.com.eventpass.evento.EstadoEvento.PUBLICADO and e.fechaInicio > :ahora
+        """)
+    List<Evento> buscarTodosPublicadosFuturos(@Param("ahora") Instant ahora);
+
     /**
      * Descuento de cupo en UNA sola sentencia atómica (decisión central, §3.1).
      * Nunca leer-comparar-guardar en Java. Devuelve 0 si no hay cupo o el evento

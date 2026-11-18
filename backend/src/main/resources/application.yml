@@ -25,6 +25,12 @@ server:
   servlet:
     context-path: /api/v1       # health => /api/v1/actuator/health; API => /api/v1/events...
 
+springdoc:
+  api-docs:
+    path: /docs          # con el context-path, queda expuesto en /api/v1/docs (§6.3)
+  swagger-ui:
+    path: /swagger-ui.html
+
 management:
   endpoints:
     web:
@@ -38,9 +44,17 @@ management:
   health:
     mail:
       enabled: false   # la salud no depende del SMTP (las notificaciones van por outbox)
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  tracing:
+    sampling:
+      probability: 1.0   # demo: traceId en el 100% de los requests (no hay volumen real)
 
 # Parámetros de negocio (configurables por entorno)
 app:
+  servicio: api   # etiqueta "service" en los logs JSON (application-worker.yml la pisa)
   jwt:
     secret: ${JWT_SECRET:dev-secret-cambiar-por-uno-de-32-bytes-minimo}
   reserva:

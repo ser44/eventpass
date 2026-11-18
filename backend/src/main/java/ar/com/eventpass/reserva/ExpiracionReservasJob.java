@@ -6,10 +6,12 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import ar.com.eventpass.comun.MetricasNegocio;
 import ar.com.eventpass.evento.EventoRepository;
 
 /**
@@ -26,11 +28,14 @@ public class ExpiracionReservasJob {
     private final ReservaRepository reservaRepo;
     private final EventoRepository eventoRepo;
     private final Clock clock;
+    private final MetricasNegocio metricas;
 
-    public ExpiracionReservasJob(ReservaRepository reservaRepo, EventoRepository eventoRepo, Clock clock) {
+    public ExpiracionReservasJob(ReservaRepository reservaRepo, EventoRepository eventoRepo, Clock clock,
+                                MetricasNegocio metricas) {
         this.reservaRepo = reservaRepo;
         this.eventoRepo = eventoRepo;
         this.clock = clock;
+        this.metricas = metricas;
     }
 
     @Scheduled(fixedDelay = 15000)
@@ -42,8 +47,11 @@ public class ExpiracionReservasJob {
             eventoRepo.restituirCupo(r.getEventoId(), r.getCantidad());
         }
         reservaRepo.saveAll(vencidas);
+        metricas.reservasExpiradas(vencidas.size());
         if (!vencidas.isEmpty()) {
-            log.info("Expiradas {} reservas vencidas; cupo restituido", vencidas.size());
+            try (var c = MDC.putCloseable("accion", "RESERVAS_EXPIRADAS")) {
+                log.info("Expiradas {} reservas vencidas; cupo restituido", vencidas.size());
+            }
         }
         return vencidas.size();
     }
